@@ -125,7 +125,7 @@ function utms_edit_dashboard_items() {
     remove_menu_page('edit.php'); // Posts
     remove_menu_page('upload.php'); // Media
 	remove_menu_page('link-manager.php'); // Links
-	remove_menu_page('edit.php?post_type=page'); // Pages
+	//remove_menu_page('edit.php?post_type=page'); // Pages
 	remove_menu_page('edit-comments.php'); // Comments
 	//remove_menu_page('themes.php'); // Appearance
 	//remove_menu_page('plugins.php'); // Plugins
@@ -135,7 +135,7 @@ function utms_edit_dashboard_items() {
 }
 
 
-add_action( 'admin_init', 'utms_remove_dashboard_items' );
+add_action( 'admin_init', 'utms_edit_dashboard_items' );
 	
 /**
  *Customizing the Admin Bar
@@ -144,17 +144,28 @@ add_action( 'admin_init', 'utms_remove_dashboard_items' );
  
  function utms_edit_admin_bar() {
     global $wp_admin_bar;
-    //$wp_admin_bar->remove_menu('new-content'); // This removes the complete menu “Add New”. You will not require the below “remove_menu” if you using this line.
-    $wp_admin_bar->remove_menu('new-post'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Post”.
-    $wp_admin_bar->remove_menu('new-page'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Page”.
-    $wp_admin_bar->remove_menu('new-media'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Media”.
-    $wp_admin_bar->remove_menu('new-link'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Link”.
-    $wp_admin_bar->remove_menu('new-user'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “User”.
-    $wp_admin_bar->remove_menu('new-theme'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Theme”.
-    $wp_admin_bar->remove_menu('new-plugin'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Plugin”.
+    //$wp_admin_bar->remove_menu('new-content'); 
+    // This removes the complete menu “Add New”. You will not require the below “remove_menu” if you using this line.
+    $wp_admin_bar->remove_menu('new-post'); 
+    // This (when used individually with other “remove menu” lines removed) will hide the menu item “Post”.
+    $wp_admin_bar->remove_menu('new-page'); 
+    // This (when used individually with other “remove menu” lines removed) will hide the menu item “Page”.
+    $wp_admin_bar->remove_menu('new-media'); 
+    // This (when used individually with other “remove menu” lines removed) will hide the menu item “Media”.
+    $wp_admin_bar->remove_menu('new-link'); 
+    // This (when used individually with other “remove menu” lines removed) will hide the menu item “Link”.
+    $wp_admin_bar->remove_menu('new-user'); 
+    // This (when used individually with other “remove menu” lines removed) will hide the menu item “User”.
+    $wp_admin_bar->remove_menu('new-theme'); 
+    // This (when used individually with other “remove menu” lines removed) will hide the menu item “Theme”.
+    $wp_admin_bar->remove_menu('new-plugin'); 
+    // This (when used individually with other “remove menu” lines removed) will hide the menu item “Plugin”.
+    $wp_admin_bar->remove_menu('comments');
+    // This will remove the Comments Menu
 }
 
 add_action( 'wp_before_admin_bar_render', 'utms_edit_admin_bar' );
+
 
 	
 /**
@@ -166,7 +177,7 @@ add_action( 'wp_before_admin_bar_render', 'utms_edit_admin_bar' );
  *https://github.com/Gizburdt/Wordpress-Cuztom-Helper
  */
 
-include('cpt-helper/cuztom_helper.php');  
+include('library/cpt-helper/cuztom_helper.php');  
 
 
 /**
