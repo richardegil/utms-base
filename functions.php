@@ -120,9 +120,7 @@ add_action( 'wp_enqueue_scripts', 'utms_base_scripts' );
  * http://www.instantshift.com/2012/03/06/21-most-useful-wordpress-admin-page-hacks/
  */
 
-
-
-function subi_remove_dashboard_items() {
+function utms_edit_dashboard_items() {
 	remove_menu_page('index.php'); // Dashboard
     remove_menu_page('edit.php'); // Posts
     remove_menu_page('upload.php'); // Media
@@ -137,8 +135,25 @@ function subi_remove_dashboard_items() {
 }
 
 
-add_action( 'admin_init', 'subi_remove_dashboard_items' );
+add_action( 'admin_init', 'utms_remove_dashboard_items' );
 	
+/**
+ *Customizing the Admin Bar
+ */
+ function utms_edit_admin_bar() {
+    global $wp_admin_bar;
+    //$wp_admin_bar->remove_menu('new-content'); // This removes the complete menu “Add New”. You will not require the below “remove_menu” if you using this line.
+    $wp_admin_bar->remove_menu('new-post'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Post”.
+    $wp_admin_bar->remove_menu('new-page'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Page”.
+    $wp_admin_bar->remove_menu('new-media'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Media”.
+    $wp_admin_bar->remove_menu('new-link'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Link”.
+    $wp_admin_bar->remove_menu('new-user'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “User”.
+    $wp_admin_bar->remove_menu('new-theme'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Theme”.
+    $wp_admin_bar->remove_menu('new-plugin'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Plugin”.
+}
+
+add_action( 'wp_before_admin_bar_render', 'utms_edit_admin_bar' );
+
 	
 /**
  *CUSTOM POST TYPE 
@@ -420,22 +435,5 @@ function my_website_custom_post_type_onomies_meta_box_format( $format, $taxonomy
    // WordPress filters must always return a value
    return $format;
 }
-
-
-/**
- *Customizing the Admin Bar
- */
- function OXP_admin_bar_edit() {
-    global $wp_admin_bar;
-    $wp_admin_bar->remove_menu('new-content'); // This removes the complete menu “Add New”. You will not require the below “remove_menu” if you using this line.
-    $wp_admin_bar->remove_menu('new-post'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Post”.
-    $wp_admin_bar->remove_menu('new-page'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Page”.
-    $wp_admin_bar->remove_menu('new-media'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Media”.
-    $wp_admin_bar->remove_menu('new-link'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Link”.
-    $wp_admin_bar->remove_menu('new-user'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “User”.
-    $wp_admin_bar->remove_menu('new-theme'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Theme”.
-    $wp_admin_bar->remove_menu('new-plugin'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Plugin”.
-}
-add_action( 'wp_before_admin_bar_render', 'OXP_admin_bar_edit' );
 
 ?>
