@@ -139,7 +139,9 @@ add_action( 'admin_init', 'utms_remove_dashboard_items' );
 	
 /**
  *Customizing the Admin Bar
+ *http://www.onextrapixel.com/2012/02/24/taking-control-of-wordpress-3-0-admin-bar/
  */
+ 
  function utms_edit_admin_bar() {
     global $wp_admin_bar;
     //$wp_admin_bar->remove_menu('new-content'); // This removes the complete menu “Add New”. You will not require the below “remove_menu” if you using this line.
