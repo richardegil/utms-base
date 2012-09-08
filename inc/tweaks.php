@@ -4,27 +4,27 @@
  *
  * Eventually, some of the functionality here could be replaced by core features
  *
- * @package subi
- * @since subi 1.0
+ * @package utms-base
+ * @since utms-base 1.0
  */
 
 /**
  * Get our wp_nav_menu() fallback, wp_page_menu(), to show a home link.
  *
- * @since subi 1.0
+ * @since utms-base 1.0
  */
-function subi_page_menu_args( $args ) {
+function utms_base_page_menu_args( $args ) {
 	$args['show_home'] = true;
 	return $args;
 }
-add_filter( 'wp_page_menu_args', 'subi_page_menu_args' );
+add_filter( 'wp_page_menu_args', 'utms_base_page_menu_args' );
 
 /**
  * Adds custom classes to the array of body classes.
  *
- * @since subi 1.0
+ * @since utms-base 1.0
  */
-function subi_body_classes( $classes ) {
+function utms_base_body_classes( $classes ) {
 	// Adds a class of group-blog to blogs with more than 1 published author
 	if ( is_multi_author() ) {
 		$classes[] = 'group-blog';
@@ -32,14 +32,14 @@ function subi_body_classes( $classes ) {
 
 	return $classes;
 }
-add_filter( 'body_class', 'subi_body_classes' );
+add_filter( 'body_class', 'utms_base_body_classes' );
 
 /**
  * Filter in a link to a content ID attribute for the next/previous image links on image attachment pages
  *
- * @since subi 1.0
+ * @since utms-base 1.0
  */
-function subi_enhanced_image_navigation( $url, $id ) {
+function utms_base_enhanced_image_navigation( $url, $id ) {
 	if ( ! is_attachment() && ! wp_attachment_is_image( $id ) )
 		return $url;
 
@@ -49,4 +49,4 @@ function subi_enhanced_image_navigation( $url, $id ) {
 
 	return $url;
 }
-add_filter( 'attachment_link', 'subi_enhanced_image_navigation', 10, 2 );
+add_filter( 'attachment_link', 'utms_base_enhanced_image_navigation', 10, 2 );

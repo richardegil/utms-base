@@ -7,8 +7,8 @@
  * and that other 'pages' on your WordPress site will use a
  * different template.
  *
- * @package subi
- * @since subi 1.0
+ * @package utms-base
+ * @since utms-base 1.0
  */
 
 get_header(); ?>

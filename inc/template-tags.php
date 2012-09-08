@@ -4,17 +4,17 @@
  *
  * Eventually, some of the functionality here could be replaced by core features
  *
- * @package subi
- * @since subi 1.0
+ * @package utms-base
+ * @since utms-base 1.0
  */
 
-if ( ! function_exists( 'subi_content_nav' ) ):
+if ( ! function_exists( 'utms_base_content_nav' ) ):
 /**
  * Display navigation to next/previous pages when applicable
  *
- * @since subi 1.0
+ * @since utms-base 1.0
  */
-function subi_content_nav( $nav_id ) {
+function utms_base_content_nav( $nav_id ) {
 	global $wp_query;
 
 	$nav_class = 'site-navigation paging-navigation';
@@ -23,21 +23,21 @@ function subi_content_nav( $nav_id ) {
 
 	?>
 	<nav role="navigation" id="<?php echo $nav_id; ?>" class="<?php echo $nav_class; ?>">
-		<h1 class="assistive-text"><?php _e( 'Post navigation', 'subi' ); ?></h1>
+		<h1 class="assistive-text"><?php _e( 'Post navigation', 'utms_base' ); ?></h1>
 
 	<?php if ( is_single() ) : // navigation links for single posts ?>
 
-		<?php previous_post_link( '<div class="nav-previous">%link</div>', '<span class="meta-nav">' . _x( '&larr;', 'Previous post link', 'subi' ) . '</span> %title' ); ?>
-		<?php next_post_link( '<div class="nav-next">%link</div>', '%title <span class="meta-nav">' . _x( '&rarr;', 'Next post link', 'subi' ) . '</span>' ); ?>
+		<?php previous_post_link( '<div class="nav-previous">%link</div>', '<span class="meta-nav">' . _x( '&larr;', 'Previous post link', 'utms_base' ) . '</span> %title' ); ?>
+		<?php next_post_link( '<div class="nav-next">%link</div>', '%title <span class="meta-nav">' . _x( '&rarr;', 'Next post link', 'utms_base' ) . '</span>' ); ?>
 
 	<?php elseif ( $wp_query->max_num_pages > 1 && ( is_home() || is_archive() || is_search() ) ) : // navigation links for home, archive, and search pages ?>
 
 		<?php if ( get_next_posts_link() ) : ?>
-		<div class="nav-previous"><?php next_posts_link( __( '<span class="meta-nav">&larr;</span> Older posts', 'subi' ) ); ?></div>
+		<div class="nav-previous"><?php next_posts_link( __( '<span class="meta-nav">&larr;</span> Older posts', 'utms_base' ) ); ?></div>
 		<?php endif; ?>
 
 		<?php if ( get_previous_posts_link() ) : ?>
-		<div class="nav-next"><?php previous_posts_link( __( 'Newer posts <span class="meta-nav">&rarr;</span>', 'subi' ) ); ?></div>
+		<div class="nav-next"><?php previous_posts_link( __( 'Newer posts <span class="meta-nav">&rarr;</span>', 'utms_base' ) ); ?></div>
 		<?php endif; ?>
 
 	<?php endif; ?>
@@ -45,24 +45,24 @@ function subi_content_nav( $nav_id ) {
 	</nav><!-- #<?php echo $nav_id; ?> -->
 	<?php
 }
-endif; // subi_content_nav
+endif; // utms_base_content_nav
 
-if ( ! function_exists( 'subi_comment' ) ) :
+if ( ! function_exists( 'utms_base_comment' ) ) :
 /**
  * Template for comments and pingbacks.
  *
  * Used as a callback by wp_list_comments() for displaying the comments.
  *
- * @since subi 1.0
+ * @since utms-base 1.0
  */
-function subi_comment( $comment, $args, $depth ) {
+function utms_base_comment( $comment, $args, $depth ) {
 	$GLOBALS['comment'] = $comment;
 	switch ( $comment->comment_type ) :
 		case 'pingback' :
 		case 'trackback' :
 	?>
 	<li class="post pingback">
-		<p><?php _e( 'Pingback:', 'subi' ); ?> <?php comment_author_link(); ?><?php edit_comment_link( __( '(Edit)', 'subi' ), ' ' ); ?></p>
+		<p><?php _e( 'Pingback:', 'utms_base' ); ?> <?php comment_author_link(); ?><?php edit_comment_link( __( '(Edit)', 'utms_base' ), ' ' ); ?></p>
 	<?php
 			break;
 		default :
@@ -72,10 +72,10 @@ function subi_comment( $comment, $args, $depth ) {
 			<footer>
 				<div class="comment-author vcard">
 					<?php echo get_avatar( $comment, 40 ); ?>
-					<?php printf( __( '%s <span class="says">says:</span>', 'subi' ), sprintf( '<cite class="fn">%s</cite>', get_comment_author_link() ) ); ?>
+					<?php printf( __( '%s <span class="says">says:</span>', 'utms_base' ), sprintf( '<cite class="fn">%s</cite>', get_comment_author_link() ) ); ?>
 				</div><!-- .comment-author .vcard -->
 				<?php if ( $comment->comment_approved == '0' ) : ?>
-					<em><?php _e( 'Your comment is awaiting moderation.', 'subi' ); ?></em>
+					<em><?php _e( 'Your comment is awaiting moderation.', 'utms_base' ); ?></em>
 					<br />
 				<?php endif; ?>
 
@@ -83,9 +83,9 @@ function subi_comment( $comment, $args, $depth ) {
 					<a href="<?php echo esc_url( get_comment_link( $comment->comment_ID ) ); ?>"><time pubdate datetime="<?php comment_time( 'c' ); ?>">
 					<?php
 						/* translators: 1: date, 2: time */
-						printf( __( '%1$s at %2$s', 'subi' ), get_comment_date(), get_comment_time() ); ?>
+						printf( __( '%1$s at %2$s', 'utms_base' ), get_comment_date(), get_comment_time() ); ?>
 					</time></a>
-					<?php edit_comment_link( __( '(Edit)', 'subi' ), ' ' );
+					<?php edit_comment_link( __( '(Edit)', 'utms_base' ), ' ' );
 					?>
 				</div><!-- .comment-meta .commentmetadata -->
 			</footer>
@@ -101,22 +101,22 @@ function subi_comment( $comment, $args, $depth ) {
 			break;
 	endswitch;
 }
-endif; // ends check for subi_comment()
+endif; // ends check for utms_base_comment()
 
-if ( ! function_exists( 'subi_posted_on' ) ) :
+if ( ! function_exists( 'utms_base_posted_on' ) ) :
 /**
  * Prints HTML with meta information for the current post-date/time and author.
  *
- * @since subi 1.0
+ * @since utms-base 1.0
  */
-function subi_posted_on() {
-	printf( __( 'Posted on <a href="%1$s" title="%2$s" rel="bookmark"><time class="entry-date" datetime="%3$s" pubdate>%4$s</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="%5$s" title="%6$s" rel="author">%7$s</a></span></span>', 'subi' ),
+function utms_base_posted_on() {
+	printf( __( 'Posted on <a href="%1$s" title="%2$s" rel="bookmark"><time class="entry-date" datetime="%3$s" pubdate>%4$s</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="%5$s" title="%6$s" rel="author">%7$s</a></span></span>', 'utms_base' ),
 		esc_url( get_permalink() ),
 		esc_attr( get_the_time() ),
 		esc_attr( get_the_date( 'c' ) ),
 		esc_html( get_the_date() ),
 		esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
-		esc_attr( sprintf( __( 'View all posts by %s', 'subi' ), get_the_author() ) ),
+		esc_attr( sprintf( __( 'View all posts by %s', 'utms_base' ), get_the_author() ) ),
 		esc_html( get_the_author() )
 	);
 }
@@ -125,9 +125,9 @@ endif;
 /**
  * Returns true if a blog has more than 1 category
  *
- * @since subi 1.0
+ * @since utms-base 1.0
  */
-function subi_categorized_blog() {
+function utms_base_categorized_blog() {
 	if ( false === ( $all_the_cool_cats = get_transient( 'all_the_cool_cats' ) ) ) {
 		// Create an array of all the categories that are attached to posts
 		$all_the_cool_cats = get_categories( array(
@@ -141,22 +141,22 @@ function subi_categorized_blog() {
 	}
 
 	if ( '1' != $all_the_cool_cats ) {
-		// This blog has more than 1 category so subi_categorized_blog should return true
+		// This blog has more than 1 category so utms_base_categorized_blog should return true
 		return true;
 	} else {
-		// This blog has only 1 category so subi_categorized_blog should return false
+		// This blog has only 1 category so utms_base_categorized_blog should return false
 		return false;
 	}
 }
 
 /**
- * Flush out the transients used in subi_categorized_blog
+ * Flush out the transients used in utms_base_categorized_blog
  *
- * @since subi 1.0
+ * @since utms-base 1.0
  */
-function subi_category_transient_flusher() {
+function utms_base_category_transient_flusher() {
 	// Like, beat it. Dig?
 	delete_transient( 'all_the_cool_cats' );
 }
-add_action( 'edit_category', 'subi_category_transient_flusher' );
-add_action( 'save_post', 'subi_category_transient_flusher' );
+add_action( 'edit_category', 'utms_base_category_transient_flusher' );
+add_action( 'save_post', 'utms_base_category_transient_flusher' );

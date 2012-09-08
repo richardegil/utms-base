@@ -1,20 +1,20 @@
 <?php
 /**
- * subi functions and definitions
+ * utms-base functions and definitions
  *
- * @package subi
- * @since subi 1.0
+ * @package utms-base
+ * @since utms-base 1.0
  */
 
 /**
  * Set the content width based on the theme's design and stylesheet.
  *
- * @since subi 1.0
+ * @since utms-base 1.0
  */
 if ( ! isset( $content_width ) )
 	$content_width = 640; /* pixels */
 
-if ( ! function_exists( 'subi_setup' ) ):
+if ( ! function_exists( 'utms_base_setup' ) ):
 /**
  * Sets up theme defaults and registers support for various WordPress features.
  *
@@ -22,9 +22,9 @@ if ( ! function_exists( 'subi_setup' ) ):
  * before the init hook. The init hook is too late for some features, such as indicating
  * support post thumbnails.
  *
- * @since subi 1.0
+ * @since utms-base 1.0
  */
-function subi_setup() {
+function utms_base_setup() {
 
 	/**
 	 * Custom template tags for this theme.
@@ -44,10 +44,10 @@ function subi_setup() {
 	/**
 	 * Make theme available for translation
 	 * Translations can be filed in the /languages/ directory
-	 * If you're building a theme based on subi, use a find and replace
-	 * to change 'subi' to the name of your theme in all the template files
+	 * If you're building a theme based on utms-base, use a find and replace
+	 * to change 'utms_base' to the name of your theme in all the template files
 	 */
-	load_theme_textdomain( 'subi', get_template_directory() . '/languages' );
+	load_theme_textdomain( 'utms_base', get_template_directory() . '/languages' );
 
 	/**
 	 * Add default posts and comments RSS feed links to head
@@ -63,7 +63,7 @@ function subi_setup() {
 	 * This theme uses wp_nav_menu() in one location.
 	 */
 	register_nav_menus( array(
-		'primary' => __( 'Primary Menu', 'subi' ),
+		'primary' => __( 'Primary Menu', 'utms_base' ),
 	) );
 
 	/**
@@ -71,17 +71,17 @@ function subi_setup() {
 	 */
 	add_theme_support( 'post-formats', array( 'aside', ) );
 }
-endif; // subi_setup
-add_action( 'after_setup_theme', 'subi_setup' );
+endif; // utms_base_setup
+add_action( 'after_setup_theme', 'utms_base_setup' );
 
 /**
  * Register widgetized area and update sidebar with default widgets
  *
- * @since subi 1.0
+ * @since utms-base 1.0
  */
-function subi_widgets_init() {
+function utms_base_widgets_init() {
 	register_sidebar( array(
-		'name' => __( 'Sidebar', 'subi' ),
+		'name' => __( 'Sidebar', 'utms_base' ),
 		'id' => 'sidebar-1',
 		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
 		'after_widget' => '</aside>',
@@ -89,12 +89,12 @@ function subi_widgets_init() {
 		'after_title' => '</h1>',
 	) );
 }
-add_action( 'widgets_init', 'subi_widgets_init' );
+add_action( 'widgets_init', 'utms_base_widgets_init' );
 
 /**
  * Enqueue scripts and styles
  */
-function subi_scripts() {
+function utms_base_scripts() {
 	wp_enqueue_style( 'style', get_stylesheet_uri() );
 
 	wp_enqueue_script( 'small-menu', get_template_directory_uri() . '/js/small-menu.js', array( 'jquery' ), '20120206', true );
@@ -107,14 +107,13 @@ function subi_scripts() {
 		wp_enqueue_script( 'keyboard-image-navigation', get_template_directory_uri() . '/js/keyboard-image-navigation.js', array( 'jquery' ), '20120202' );
 	}
 }
-add_action( 'wp_enqueue_scripts', 'subi_scripts' );
+add_action( 'wp_enqueue_scripts', 'utms_base_scripts' );
 
-
-	
 /**
  * Implement the Custom Header feature
  */
 //require( get_template_directory() . '/inc/custom-header.php' );
+
 
 /**
  * Hiding Posts and Pages and Other Items from WP Screens & Sticky Bar
@@ -421,5 +420,22 @@ function my_website_custom_post_type_onomies_meta_box_format( $format, $taxonomy
    // WordPress filters must always return a value
    return $format;
 }
+
+
+/**
+ *Customizing the Admin Bar
+ */
+ function OXP_admin_bar_edit() {
+    global $wp_admin_bar;
+    $wp_admin_bar->remove_menu('new-content'); // This removes the complete menu “Add New”. You will not require the below “remove_menu” if you using this line.
+    $wp_admin_bar->remove_menu('new-post'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Post”.
+    $wp_admin_bar->remove_menu('new-page'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Page”.
+    $wp_admin_bar->remove_menu('new-media'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Media”.
+    $wp_admin_bar->remove_menu('new-link'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Link”.
+    $wp_admin_bar->remove_menu('new-user'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “User”.
+    $wp_admin_bar->remove_menu('new-theme'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Theme”.
+    $wp_admin_bar->remove_menu('new-plugin'); // This (when used individually with other “remove menu” lines removed) will hide the menu item “Plugin”.
+}
+add_action( 'wp_before_admin_bar_render', 'OXP_admin_bar_edit' );
 
 ?>

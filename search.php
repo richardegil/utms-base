@@ -2,8 +2,8 @@
 /**
  * The template for displaying Search Results pages.
  *
- * @package subi
- * @since subi 1.0
+ * @package utms-base
+ * @since utms-base 1.0
  */
 
 get_header(); ?>
@@ -14,10 +14,10 @@ get_header(); ?>
 			<?php if ( have_posts() ) : ?>
 
 				<header class="page-header">
-					<h1 class="page-title"><?php printf( __( 'Search Results for: %s', 'subi' ), '<span>' . get_search_query() . '</span>' ); ?></h1>
+					<h1 class="page-title"><?php printf( __( 'Search Results for: %s', 'utms_base' ), '<span>' . get_search_query() . '</span>' ); ?></h1>
 				</header><!-- .page-header -->
 
-				<?php subi_content_nav( 'nav-above' ); ?>
+				<?php utms_base_content_nav( 'nav-above' ); ?>
 
 				<?php /* Start the Loop */ ?>
 				<?php while ( have_posts() ) : the_post(); ?>
@@ -26,7 +26,7 @@ get_header(); ?>
 
 				<?php endwhile; ?>
 
-				<?php subi_content_nav( 'nav-below' ); ?>
+				<?php utms_base_content_nav( 'nav-below' ); ?>
 
 			<?php else : ?>
 

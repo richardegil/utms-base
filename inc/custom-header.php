@@ -13,8 +13,8 @@
 	<?php } // if ( ! empty( $header_image ) ) ?>
 
  *
- * @package subi
- * @since subi 1.0
+ * @package utms-base
+ * @since utms-base 1.0
  */
 
 /**
@@ -27,25 +27,25 @@
  *
  * @todo Rework this function to remove WordPress 3.4 support when WordPress 3.6 is released.
  *
- * @uses subi_header_style()
- * @uses subi_admin_header_style()
- * @uses subi_admin_header_image()
+ * @uses utms_base_header_style()
+ * @uses utms_base_admin_header_style()
+ * @uses utms_base_admin_header_image()
  *
- * @package subi
+ * @package utms-base
  */
-function subi_custom_header_setup() {
+function utms_base_custom_header_setup() {
 	$args = array(
 		'default-image'          => '',
 		'default-text-color'     => '000',
 		'width'                  => 1000,
 		'height'                 => 250,
 		'flex-height'            => true,
-		'wp-head-callback'       => 'subi_header_style',
-		'admin-head-callback'    => 'subi_admin_header_style',
-		'admin-preview-callback' => 'subi_admin_header_image',
+		'wp-head-callback'       => 'utms_base_header_style',
+		'admin-head-callback'    => 'utms_base_admin_header_style',
+		'admin-preview-callback' => 'utms_base_admin_header_image',
 	);
 
-	$args = apply_filters( 'subi_custom_header_args', $args );
+	$args = apply_filters( 'utms_base_custom_header_args', $args );
 
 	if ( function_exists( 'wp_get_theme' ) ) {
 		add_theme_support( 'custom-header', $args );
@@ -58,7 +58,7 @@ function subi_custom_header_setup() {
 		add_custom_image_header( $args['wp-head-callback'], $args['admin-head-callback'], $args['admin-preview-callback'] );
 	}
 }
-add_action( 'after_setup_theme', 'subi_custom_header_setup' );
+add_action( 'after_setup_theme', 'utms_base_custom_header_setup' );
 
 /**
  * Shiv for get_custom_header().
@@ -71,8 +71,8 @@ add_action( 'after_setup_theme', 'subi_custom_header_setup' );
  * @todo Remove this function when WordPress 3.6 is released.
  * @return stdClass All properties represent attributes of the curent header image.
  *
- * @package subi
- * @since subi 1.1
+ * @package utms-base
+ * @since utms-base 1.1
  */
 
 if ( ! function_exists( 'get_custom_header' ) ) {
@@ -86,15 +86,15 @@ if ( ! function_exists( 'get_custom_header' ) ) {
 	}
 }
 
-if ( ! function_exists( 'subi_header_style' ) ) :
+if ( ! function_exists( 'utms_base_header_style' ) ) :
 /**
  * Styles the header image and text displayed on the blog
  *
- * @see subi_custom_header_setup().
+ * @see utms_base_custom_header_setup().
  *
- * @since subi 1.0
+ * @since utms-base 1.0
  */
-function subi_header_style() {
+function utms_base_header_style() {
 
 	// If no custom options for text are set, let's bail
 	// get_header_textcolor() options: HEADER_TEXTCOLOR is default, hide text (returns 'blank') or any hex value
@@ -125,17 +125,17 @@ function subi_header_style() {
 	</style>
 	<?php
 }
-endif; // subi_header_style
+endif; // utms_base_header_style
 
-if ( ! function_exists( 'subi_admin_header_style' ) ) :
+if ( ! function_exists( 'utms_base_admin_header_style' ) ) :
 /**
  * Styles the header image displayed on the Appearance > Header admin panel.
  *
- * @see subi_custom_header_setup().
+ * @see utms_base_custom_header_setup().
  *
- * @since subi 1.0
+ * @since utms-base 1.0
  */
-function subi_admin_header_style() {
+function utms_base_admin_header_style() {
 ?>
 	<style type="text/css">
 	.appearance_page_custom-header #headimg {
@@ -155,17 +155,17 @@ function subi_admin_header_style() {
 	</style>
 <?php
 }
-endif; // subi_admin_header_style
+endif; // utms_base_admin_header_style
 
-if ( ! function_exists( 'subi_admin_header_image' ) ) :
+if ( ! function_exists( 'utms_base_admin_header_image' ) ) :
 /**
  * Custom header image markup displayed on the Appearance > Header admin panel.
  *
- * @see subi_custom_header_setup().
+ * @see utms_base_custom_header_setup().
  *
- * @since subi 1.0
+ * @since utms-base 1.0
  */
-function subi_admin_header_image() { ?>
+function utms_base_admin_header_image() { ?>
 	<div id="headimg">
 		<?php
 		if ( 'blank' == get_header_textcolor() || '' == get_header_textcolor() )
@@ -181,4 +181,4 @@ function subi_admin_header_image() { ?>
 		<?php endif; ?>
 	</div>
 <?php }
-endif; // subi_admin_header_image
+endif; // utms_base_admin_header_image

@@ -2,8 +2,8 @@
 /**
  * The Sidebar containing the main widget areas.
  *
- * @package subi
- * @since subi 1.0
+ * @package utms-base
+ * @since utms-base 1.0
  */
 ?>
 		<div id="secondary" class="widget-area" role="complementary">
@@ -15,14 +15,14 @@
 				</aside>
 
 				<aside id="archives" class="widget">
-					<h1 class="widget-title"><?php _e( 'Archives', 'subi' ); ?></h1>
+					<h1 class="widget-title"><?php _e( 'Archives', 'utms_base' ); ?></h1>
 					<ul>
 						<?php wp_get_archives( array( 'type' => 'monthly' ) ); ?>
 					</ul>
 				</aside>
 
 				<aside id="meta" class="widget">
-					<h1 class="widget-title"><?php _e( 'Meta', 'subi' ); ?></h1>
+					<h1 class="widget-title"><?php _e( 'Meta', 'utms_base' ); ?></h1>
 					<ul>
 						<?php wp_register(); ?>
 						<li><?php wp_loginout(); ?></li>
