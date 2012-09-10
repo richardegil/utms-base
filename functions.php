@@ -117,7 +117,7 @@ add_action( 'wp_enqueue_scripts', 'utms_base_scripts' );
 
 /**
  * Hiding Posts and Pages and Other Items from WP Screens & Sticky Bar
- * http://www.instantshift.com/2012/03/06/21-most-useful-wordpress-admin-page-hacks/
+ * http://www.onextrapixel.com/2012/02/24/taking-control-of-wordpress-3-0-admin-bar/
  */
 
 function utms_edit_dashboard_items() {
@@ -134,12 +134,10 @@ function utms_edit_dashboard_items() {
 	//remove_menu_page('options-general.php'); // Settings
 }
 
-
 add_action( 'admin_init', 'utms_edit_dashboard_items' );
 	
 /**
  *Customizing the Admin Bar
- *http://www.onextrapixel.com/2012/02/24/taking-control-of-wordpress-3-0-admin-bar/
  */
  
  function utms_edit_admin_bar() {
@@ -148,7 +146,7 @@ add_action( 'admin_init', 'utms_edit_dashboard_items' );
     // This removes the complete menu “Add New”. You will not require the below “remove_menu” if you using this line.
     $wp_admin_bar->remove_menu('new-post'); 
     // This (when used individually with other “remove menu” lines removed) will hide the menu item “Post”.
-    $wp_admin_bar->remove_menu('new-page'); 
+    //$wp_admin_bar->remove_menu('new-page'); 
     // This (when used individually with other “remove menu” lines removed) will hide the menu item “Page”.
     $wp_admin_bar->remove_menu('new-media'); 
     // This (when used individually with other “remove menu” lines removed) will hide the menu item “Media”.
@@ -165,6 +163,43 @@ add_action( 'admin_init', 'utms_edit_dashboard_items' );
 }
 
 add_action( 'wp_before_admin_bar_render', 'utms_edit_admin_bar' );
+
+
+/**
+ *CUSTOM DASHBOARD TO SHOW CPT on RIGHT NOW
+ *http://wordpress.stackexchange.com/questions/5318/adding-custom-post-type-counts-to-the-dashboard
+*/
+
+// Add custom taxonomies and custom post types counts to dashboard
+add_action( 'right_now_content_table_end', 'my_add_counts_to_dashboard' );
+function my_add_counts_to_dashboard() {
+    // Custom post types counts
+    $post_types = get_post_types( array( '_builtin' => false ), 'objects' );
+    foreach ( $post_types as $post_type ) {
+        $num_posts = wp_count_posts( $post_type->name );
+        $num = number_format_i18n( $num_posts->publish );
+        $text = _n( $post_type->labels->singular_name, $post_type->labels->name, $num_posts->publish );
+        if ( current_user_can( 'edit_posts' ) ) {
+            $num = '<a href="edit.php?post_type=' . $post_type->name . '">' . $num . '</a>';
+            $text = '<a href="edit.php?post_type=' . $post_type->name . '">' . $text . '</a>';
+        }
+        echo '<td class="first b b-' . $post_type->name . 's">' . $num . '</td>';
+        echo '<td class="t ' . $post_type->name . 's">' . $text . '</td>';
+        echo '</tr>';
+
+        if ( $num_posts->pending > 0 ) {
+            $num = number_format_i18n( $num_posts->pending );
+            $text = _n( $post_type->labels->singular_name . ' pending', $post_type->labels->name . ' pending', $num_posts->pending );
+            if ( current_user_can( 'edit_posts' ) ) {
+                $num = '<a href="edit.php?post_status=pending&post_type=' . $post_type->name . '">' . $num . '</a>';
+                $text = '<a href="edit.php?post_status=pending&post_type=' . $post_type->name . '">' . $text . '</a>';
+            }
+            echo '<td class="first b b-' . $post_type->name . 's">' . $num . '</td>';
+            echo '<td class="t ' . $post_type->name . 's">' . $text . '</td>';
+            echo '</tr>';
+        }
+    }
+}
 
 
 	
@@ -184,76 +219,107 @@ include('library/cpt-helper/cuztom_helper.php');
  *CPT for Physician Profile
  */
  
-$physician = register_cuztom_post_type( 
-	'physician',
+$faculty = register_cuztom_post_type( 
+	'faculty',
 	array(
 		'has_archive' => true,
-		'supports' => array ('title')
+		'supports' => array ('title', 'revisions'),
+		'show_in_nav_menus'   => TRUE,
+		'show_in_menu'        => TRUE,
+		'show_in_nav_menus'   => TRUE
+		//'rewrite' => array("slug" => "property") // Permalinks format
 	));
 //$physician->add_taxonomy( 'category' );
 //$physician->add_taxonomy( 'Keyword' );
 
-$physician->add_meta_box( 
-	'Physician Name &amp; Image', 
+$faculty->add_meta_box( 
+	'Faculty Member Name &amp; Image', 
 	array(
 		array(
-            'name'          => 'physician_fname',
+            'name'          => 'faculty_prefixtitle',
+            'label'         => 'Prefix Title',
+            'description'   => 'Eg: "Dr."',
+            'type'          => 'text'
+         ),
+         array(
+            'name'          => 'faculty_fname',
             'label'         => 'First Name',
             'type'          => 'text'
          ),
          array(
-            'name'          => 'physician_mname',
-            'label'         => 'Middle Name',
+            'name'          => 'faculty_mname',
+            'label'         => 'Middle Name/Initial',
             'type'          => 'text'
          ),
          array(
-            'name'          => 'physician_lname',
+            'name'          => 'faculty_lname',
             'label'         => 'Last Name',
             'type'          => 'text'
          ),
           array(
-            'name'          => 'physician_nname',
+            'name'          => 'faculty_nname',
             'label'         => 'Nick Name',
             'description'   => 'Enter nick name if you have one ',
             'type'          => 'text'
          ),
          array(
-            'name'          => 'physician_titleacronym',
+            'name'          => 'faculty_title',
+            'label'         => 'Title(s)',
+            'description'   => 'Eg: "Department Chair, Assistant Professor etc. Primary Title should be first',
+            'type'          => 'text',
+            'repeatable'	=>	true
+         ),
+         array(
+            'name'          => 'faculty_titleacronym',
             'label'         => 'Title Acronyms',
             'description'   => 'Eg: "FACS, MD, PhD" which will be automagically added to your name ',
             'type'          => 'text',
             'repeatable'	=>	true
          ),
-		array(
-			'name' => 'physician_gender',
+         array(
+            'name'          => 'faculty_certification',
+            'label'         => 'Board Certifications',
+            'description'   => 'Format: American Board of Medical Physics, 2011 ',
+            'type'          => 'text',
+            'repeatable'	=>	true
+         ),
+         array(
+            'name'          => 'faculty_focus',
+            'label'         => 'Professional Focus',
+            'type'          => 'text',
+            'repeatable'	=>	true
+         ),
+         array(
+            'name'          => 'faculty_interest',
+            'label'         => 'Interests',
+            'type'          => 'text',
+            'repeatable'	=>	true
+         ),
+		/*array(
+			'name' => 'faculty_gender',
 			'label' => 'Gender',
 			'type' => 'radios',
 			'options' => array(
 				'male' => 'Male',
 				'female' => 'Female'
 				)
-		),
+		),*/
 		array(
-            'name'          => 'physician_image',
+            'name'          => 'faculty_image',
             'label'         => 'Profile Image',
             'description'   => 'Please use an optimized image of 00px wide x 00px high',
             'type'          => 'image',
          ),
-       array(
-            'name'          => 'physician_languages',
-            'label'         => 'Languages',
-            'type'          => 'text',
-            'repeatable'	=> true
-         ),
+       
 	));
 	
-$physician->add_meta_box( 
-	'Interests &amp Appointment Dates', 
+$faculty->add_meta_box( 
+	'UT Health Contact Information (Departmental)', 
 	array(
 		/*
 		*Using CPT-onomies
 		*array(
-            'name'          => 'physician_specialties',
+            'name'          => 'faculty_specialties',
             'label'         => 'Specialties',
             'type'          => 'select',
             'options' 		=> array(
@@ -262,43 +328,88 @@ $physician->add_meta_box(
 			'repeatable'	=> true
          ),*/
 		array(
-            'name'          => 'physician_interests',
-            'label'         => 'Areas of Interest',
-            'type'          => 'textarea',
+            'name'          => 'faculty_phone',
+            'label'         => 'UTHealth Phone Number',
+            'type'          => 'text'
          ),
          array(
-            'name'          => 'physician_appointmentdate',
-            'label'         => 'Appointed Date',
-            'type'          => 'date'
+            'name'          => 'faculty_fax',
+            'label'         => 'UTHealth Fax Number',
+            'type'          => 'text'
          ),
          array(
-            'name'          => 'physician_startdate',
-            'label'         => 'Start Date',
-            'description'	=> 'If different from Appointed Date (This will not be displayed on the profile)',
-            'type'          => 'date'
+            'name'          => 'faculty_email',
+            'label'         => 'UTHealth Email Address',
+            'type'          => 'text'
+         ),
+         array(
+			'name' => 'faculty_assistant',
+			'label' => 'Staff Assistant?',
+			'type' => 'radios',
+			'options' => array(
+				'yes' => 'Yes',
+				'no' => 'No'
+				)
+		),
+		array(
+            'name'          => 'faculty_assistantname',
+            'label'         => 'Name of Assistant',
+            'type'          => 'text'
+         ),
+         array(
+            'name'          => 'faculty_assistantphone',
+            'label'         => 'Assistant\'s Phone',
+            'type'          => 'text'
+         ),
+         array(
+            'name'          => 'faculty_assistantemail',
+            'label'         => 'Assistant\'s Email',
+            'type'          => 'text'
          )
 	));
 	
+$faculty->add_meta_box( 
+	'UT Physicians Information (Clinical Practice)', 
+	array(
+		/*
+		*Using CPT-onomies
+		*array(
+            'name'          => 'faculty_specialties',
+            'label'         => 'Specialties',
+            'type'          => 'select',
+            'options' 		=> array(
+								'dynamic' => 'Dynamically populated from CPT Specialties'
+								),
+			'repeatable'	=> true
+         ),*/
+		array(
+            'name'          => 'faculty_utp-profile',
+            'label'         => 'UTPhysicians Website Profile',
+            'type'          => 'text'
+         )
 
-$physician->add_meta_box( 
+	));
+	
+
+$faculty->add_meta_box( 
 	'Education &amp; Fellowships', 
 	array(
 		array(
-            'name'          => 'physician_graduateschool',
+            'name'          => 'faculty_graduateschool',
             'label'         => 'Graduate School',
             'description'	=> '(Format: Name of Institution, State)',
             'type'          => 'text',
             'repeatable'	=> true
          ),
 		array(
-            'name'          => 'physician_residency',
+            'name'          => 'faculty_residency',
             'label'         => 'Residency',
             'description'	=> '(Format: Name of Institution, State)',
             'type'          => 'text',
             'repeatable'	=> true
          ),
          array(
-            'name'          => 'physician_fellowship',
+            'name'          => 'faculty_fellowship',
             'label'         => 'Fellowship',
             'description'	=> '(Format: Name of Institution, State)',
             'type'          => 'text',
@@ -306,119 +417,141 @@ $physician->add_meta_box(
          )
 	));
 	
-/*
-		*Using CPT-onomies
-		*$physician->add_meta_box( 
-	'Clinics &amp; Locations', 
+$faculty->add_meta_box( 
+	'Research &amp; Publications', 
 	array(
 		array(
-            'name'          => 'physician_locations',
-            'label'         => 'Select the Clinic Location',
-            //'description'	=> '(Note: This section will be thought out in more detail)',
-            'type'          => 'select',
-            'options' 		=> array(
-								'dynamic' => 'Dynamically populated from CTP locations'
-								),
-			'repeatable'	=> true
-         )
-	));
-
-*/
-
-
-/**
- *CPT for Location
- */
-
-$utplocation = register_cuztom_post_type( 
-	'location',
-	array(
-		'has_archive' => true,
-		'supports' => array ('title')
-	));
-	
-$utplocation->add_meta_box( 
-	'Location Details', 
-	array(
-		array(
-            'name'          => 'utplocation_name',
-            'label'         => 'Physical Address',
-            'description'	=> '(Note: This section will be thought out in more detail)',
-            'type'          => 'textarea'
+            'name'          => 'faculty_pubmed',
+            'label'         => 'Pubmed Link',
+            'type'          => 'text'
+         ),
+         array(
+            'name'          => 'faculty_activeresearch',
+            'label'         => 'Current Research',
+            'type'          => 'textarea',
+            'repeatable'	=> true,
+         ),
+         array(
+            'name'          => 'faculty_publication',
+            'label'         => 'Selected Publications',
+            'type'          => 'textarea',
+            'repeatable'	=> true,
          )
 	));
 	
-/**
- *CPT for Specialities
- */
-
-$utpspecialties = register_cuztom_post_type( 
-	'specialties',
-	array(
-		'has_archive' => true,
-		'supports' => array ('title')
-	));
-	
-/**
- *CPT FOR CLINICS 
- */
-
-$utpclinic = register_cuztom_post_type( 
-	'clinic',
-	array(
-		'has_archive' => true,
-		'supports' => array ('title')
-	));
-	
-$utpclinic->add_meta_box( 
-	'Clinic Details', 
+$faculty->add_meta_box( 
+	'Awards &amp; Recognitions', 
 	array(
 		array(
-            'name'          => 'utpclinic_address',
-            'label'         => 'Clinic Address',
-            'type'          => 'textarea'
-         ),
-         /*
-		*Using CPT-onomies
-		*array(
-            'name'          => 'utpclinic_location',
-            'label'         => 'Select the Clinic Location',
-            'type'          => 'select',
-            'options' 		=> array(
-								'dynamic' => 'Dynamically populated from CTP locations'
-								)
-         ),*/
-         array(
-            'name'          => 'utpclinic_phone',
-            'label'         => 'Clinic Phone',
-            'description'	=> '(The first number is the primary)',
-            'type'          => 'text'
+            'name'          => 'faculty_awards',
+            'label'         => 'Selected Awards',
+            'type'          => 'textarea',
+            'repeatable'	=>	true
          ),
          array(
-            'name'          => 'utpclinic_afterhoursphone',
-            'label'         => 'Afterhours Phone',
-            'type'          => 'text'
-         ),
-         array(
-            'name'          => 'utpclinic_fax',
-            'label'         => 'Clinic Fax',
-            'type'          => 'text'
-         ),
-         array(
-            'name'          => 'utpclinic_weekdayhours',
-            'label'         => 'Clinic Hours M-F',
-            'description'	=> '(Format: 8-5, 9-5)',
-            'type'          => 'text'
-         ),
-         array(
-            'name'          => 'utpclinic_weekendhours',
-            'label'         => 'Clinic Hours Weekends',
-            'description'	=> '(Format: Sat 8-5, +Add Sun 9-5)',
-            'type'          => 'text',
+            'name'          => 'faculty_recognition',
+            'label'         => 'Selected Recognitions',
+            'type'          => 'textarea',
             'repeatable'	=> true
          )
 	));
+
+$faculty->add_meta_box( 
+	'Biography', 
+	array(
+		array(
+            'name'          => 'faculty_biography',
+            'label'         => 'Short Biography',
+            'type'          => 'wysiwyg'
+         )
+	));
 	
+$faculty->add_meta_box( 
+	'Work Experience &amp; Additional Information', 
+	array(
+		array(
+            'name'          => 'faculty_workexperience',
+            'label'         => 'Work Experience(s)',
+            'type'          => 'textarea',
+            'repeatable'	=>	true
+         ),
+         array(
+            'name'          => 'faculty_license',
+            'label'         => 'License',
+            'type'          => 'text',
+            'repeatable'	=>	true
+         ),
+         array(
+            'name'          => 'faculty_affiliations',
+            'label'         => 'Affiliations/Associations',
+            'type'          => 'text',
+            'repeatable'	=> true
+         ),
+         array(
+            'name'          => 'faculty_additionalinfo',
+            'label'         => 'Additional Information',
+            'type'          => 'wysiwyg'
+         )
+	));
+	
+/**
+*CPT FOR CLINICS
+*/
+
+$utpclinic = register_cuztom_post_type(
+			'clinic',
+			array(
+			'has_archive' => true,
+			'show_in_nav_menus'   => TRUE,
+			'supports' => array ('title', 'revisions')
+			));
+
+$utpclinic->add_meta_box(
+		'Clinic Details',
+		array(
+		array(
+            'name' => 'utpclinic_address',
+            'label' => 'Clinic Address',
+            'type' => 'textarea'
+         ),
+         array(
+            'name' => 'utpclinic_phone',
+            'label' => 'Clinic Phone',
+            'description'	=> '(The first number is the primary)',
+            'type' => 'text'
+         ),
+         array(
+            'name' => 'utpclinic_fax',
+            'label' => 'Clinic Fax',
+            'type' => 'text'
+         ),
+         array(
+            'name' => 'utpclinic_afterhoursphone',
+            'label' => 'Afterhours Phone',
+            'type' => 'text'
+         ),
+         array(
+            'name' => 'utpclinic_weekdayhours',
+            'label' => 'Clinic Hours',
+            'description'	=> '(Format: Monday 8am-5pm)',
+            'type' => 'text',
+            'repeatable' => true
+         )
+        ));
+
+/**
+*CPT FOR CLINICS
+*/
+
+$news = register_cuztom_post_type(
+		'news',
+		array(
+		'has_archive' => true,
+		'show_in_menu'        => TRUE,
+		'show_in_nav_menus'   => TRUE,
+		'supports' => array ('title', 'editor', 'revisions', 'excerpts', 'comments')
+		));
+		
 
 /**
 	*CPT-onomies
@@ -437,7 +570,7 @@ function my_website_custom_post_type_onomies_meta_box_format( $format, $taxonomy
 	//return options are autocomplete, checklist and dropdown
    // when editing a post with the post type 'physician',
    // we want to assign the 'specialities' CPT-onomy terms with an autocomplete box
-   if ( $post_type == 'physician' && $taxonomy == 'specialties' )
+   if ( $post_type == 'news' && $taxonomy == 'faculty' )
       return 'autocomplete';
    // no matter the post type, we want to assign the 'location' CPT-onomy terms with a select dropdown
    elseif ( $taxonomy == 'location' || 'clinic' ) 
